@@ -1,1 +1,3 @@
 # NFT Game
+
+CONTRACT_ADDRESS=
