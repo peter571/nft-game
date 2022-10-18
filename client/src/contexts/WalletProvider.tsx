@@ -1,12 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { characterDataProp, ProviderProp } from "../types";
+import { CharacterData, ProviderProp } from "../types";
 import { fetchUserNFT } from "./contractMethods";
 declare var window: any;
 
 interface GlobalState {
   currentAccount: string;
-  characterNFT: characterDataProp | null;
+  characterNFT: CharacterData | null;
   connectWallet: () => Promise<void>;
+  setCharacterNFT: React.Dispatch<React.SetStateAction<CharacterData | null>>;
 }
 
 const WalletContext = createContext<GlobalState>({} as GlobalState);
@@ -17,9 +18,7 @@ export function useWallet() {
 
 const WalletProvider = ({ children }: ProviderProp) => {
   const [currentAccount, setCurrentAccount] = useState("");
-  const [characterNFT, setCharacterNFT] = useState<characterDataProp | null>(
-    null
-  );
+  const [characterNFT, setCharacterNFT] = useState<CharacterData | null>(null);
 
   const checkWalletIsConnected = async () => {
     const { ethereum } = window;
@@ -41,7 +40,6 @@ const WalletProvider = ({ children }: ProviderProp) => {
   const connectWallet = async () => {
     try {
       const { ethereum } = window;
-
       if (!ethereum) {
         alert("Get MetaMask!");
         return;
@@ -65,7 +63,7 @@ const WalletProvider = ({ children }: ProviderProp) => {
 
   return (
     <WalletContext.Provider
-      value={{ currentAccount, connectWallet, characterNFT }}
+      value={{ currentAccount, connectWallet, characterNFT, setCharacterNFT }}
     >
       {children}
     </WalletContext.Provider>
